@@ -1,10 +1,8 @@
 import React from 'react';
 import { FirebaseAuth } from 'react-firebaseui';
-import firebase from 'firebase';
-
-import { config } from './firebase.config';
-
-firebase.initializeApp(config);
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { firebaseConnect } from 'react-redux-firebase';
 
 class App extends React.Component {
   constructor(props) {
@@ -16,15 +14,15 @@ class App extends React.Component {
 
   uiConfig = {
     signInFlow: 'redirect',
-    // We will display Google and Facebook as auth providers.
     signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID
+      this.props.firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      this.props.firebase.auth.FacebookAuthProvider.PROVIDER_ID
     ],
     callbacks: {
       signInSuccess: () => {
+        console.log(this.props.auth);
         this.setState({ signedIn: true });
-        return true; // Avoid redirects after sign-in.
+        return true;
       }
     }
   };
@@ -35,7 +33,7 @@ class App extends React.Component {
         <div>
           <h1>My App</h1>
           <p>Please sign-in:</p>
-          <FirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
+          <FirebaseAuth uiConfig={this.uiConfig} firebaseAuth={this.props.firebase.auth()} />
         </div>
       );
     }
@@ -48,4 +46,7 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default compose(
+  firebaseConnect(), // withFirebase can also be used
+  connect(({ firebase: { auth } }) => ({ auth }))
+)(App);

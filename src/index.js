@@ -1,5 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import App from './App';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { createInitialStore } from './configureStore';
+
+ReactDOM.render(
+  <Provider store={createInitialStore()}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
