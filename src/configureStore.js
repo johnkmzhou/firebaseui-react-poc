@@ -7,9 +7,10 @@ import { config } from './firebase.config';
 import { rootReducer } from './reducers';
 
 // react-redux-firebase options
-const reduxConfig = {
+export const reduxConfig = {
   userProfile: 'users', // firebase root where user profiles are stored
   attachAuthIsReady: true, // attaches auth is ready promise to store
+  updateProfileOnLogin: true
 };
 
 export const createInitialStore = (initialState = {}) => {

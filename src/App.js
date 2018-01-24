@@ -4,6 +4,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 
+import { createUserProfile } from './actions';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -19,8 +21,8 @@ class App extends React.Component {
       this.props.firebase.auth.FacebookAuthProvider.PROVIDER_ID
     ],
     callbacks: {
-      signInSuccess: () => {
-        console.log(this.props.auth);
+      signInSuccess: (currentUser, credential) => {
+        this.props.createUserProfile(currentUser);
         this.setState({ signedIn: true });
         return true;
       }
@@ -47,6 +49,6 @@ class App extends React.Component {
 }
 
 export default compose(
-  firebaseConnect(), // withFirebase can also be used
-  connect(({ firebase: { auth } }) => ({ auth }))
+  firebaseConnect(),
+  connect(({ firebase: { auth, profile } }) => ({ auth, profile }), { createUserProfile })
 )(App);
