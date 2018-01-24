@@ -21,7 +21,7 @@ class App extends React.Component {
       this.props.firebase.auth.FacebookAuthProvider.PROVIDER_ID
     ],
     callbacks: {
-      signInSuccess: (currentUser, credential) => {
+      signInSuccess: currentUser => {
         this.props.createUserProfile(currentUser);
         this.setState({ signedIn: true });
         return true;
@@ -50,5 +50,5 @@ class App extends React.Component {
 
 export default compose(
   firebaseConnect(),
-  connect(({ firebase: { auth, profile } }) => ({ auth, profile }), { createUserProfile })
+  connect(({ firebase: { auth } }) => ({ auth }), { createUserProfile })
 )(App);
